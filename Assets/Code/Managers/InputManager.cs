@@ -14,16 +14,18 @@ namespace CantFindItGrindIt.Managers
 
         public Text DebugText;
 
-        // Use this for initialization
-        void Start()
-        {
 
+        public void ActivateAllControls()
+        {
+            GuageClusterGameObjects.ForEach(go => go.SetActive(true));
+            TransmissionGameObjects.ForEach(go => go.SetActive(true));
         }
 
-        // Update is called once per frame
-        void Update()
+        public void DeactivateAllControls()
         {
-
+            GuageClusterGameObjects.ForEach(go => go.SetActive(false));
+            TransmissionGameObjects.ForEach(go => go.SetActive(false));
         }
+
     }
 }
