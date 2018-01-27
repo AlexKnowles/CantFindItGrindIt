@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public LongPress BreakButton;
     public LongPress ClutchButton;
     public Slider RevCounter;
+    public Scrollbar ShiftZone;
 
     public Text GoodShiftCountDisplay;
     public Text BadShiftCountDisplay;
@@ -17,6 +18,8 @@ public class GameManager : MonoBehaviour
     
     private int goodShiftCount = 0;
     private int badShiftCount = 0;
+
+    private float revSpeed = 0.8f;
 
     // Use this for initialization
     void Start ()
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
         if (AcceleratorButton.IsDown)
         {
             Accelerate();
+            IsRevcounterInRange();
             return;
         }
 
@@ -44,7 +48,13 @@ public class GameManager : MonoBehaviour
         }
 
         Decelerate();
-	}
+        IsRevcounterInRange();
+    }
+
+    private void LateUpdate()
+    {
+        
+    }
 
     public void DoShift()
     {
@@ -78,17 +88,32 @@ public class GameManager : MonoBehaviour
 
     private void Accelerate()
     {
-        RevCounter.value += (RevSpeed * Time.deltaTime);
+        RevCounter.value += (revSpeed * Time.deltaTime);
     }
 
     private void Break()
     {
-        RevCounter.value -= (((RevSpeed / 2) * (1 + (RevCounter.value / RevCounter.maxValue))) * Time.deltaTime);
+        RevCounter.value -= (((revSpeed / 2) * (1 + (RevCounter.value / RevCounter.maxValue))) * Time.deltaTime);
     }
     
     private void Decelerate()
     {
-        RevCounter.value -= (((RevSpeed/3) * (1 + (RevCounter.value/RevCounter.maxValue))) * Time.deltaTime);
+        RevCounter.value -= (((revSpeed/3) * (1 + (RevCounter.value/RevCounter.maxValue))) * Time.deltaTime);
+    }
+
+    private void IsRevcounterInRange()
+    {
+        float currentScrollValue = ShiftZone.value;
+        float currentScrollWidth = ShiftZone.size / 2;
+        float scrollBarMinBound = currentScrollValue - currentScrollWidth;
+        float scrollBarMaxBound = currentScrollValue + currentScrollWidth;
+
+        if(RevCounter.value >=  scrollBarMinBound && RevCounter.value <= scrollBarMaxBound)
+        {
+            Debug.Log(RevCounter.value);
+            Debug.Log(scrollBarMinBound);
+            //Debug.Log("In Range!!");
+        }
     }
 
 }
