@@ -17,16 +17,24 @@ namespace CantFindItGrindIt
         private Vector3 carModelStartingPosition;
 
         public float CurrentDistanceInMeters { get; private set; }
+        public float TopSpeedInKMH { get; private set; }
+        public float TopSpeedInMPH
+        {
+            get
+            {
+                return TopSpeedInKMH * 0.621371f;
+            }
+        }
 
-        public PlayerCar(GameManager gameManager, InputManager inputManager)
+        public PlayerCar(GameManager gameManager, InputManager inputManager, GameObject carModel)
         {
             this.gameManager = gameManager;
             this.inputManager = inputManager;
 
             guageCluster = new GuageCluster(inputManager);
-            transmission = new Transmission(gameManager, inputManager, this, guageCluster);
+            transmission = new Transmission(gameManager, inputManager, guageCluster);
 
-            carModelTransform = GameObject.FindGameObjectWithTag("Car").GetComponent<Transform>();
+            carModelTransform = carModel.GetComponent<Transform>();
             carModelStartingPosition = carModelTransform.position;
             CurrentDistanceInMeters = 0;
         }
@@ -49,7 +57,9 @@ namespace CantFindItGrindIt
 
             Vector3 nextPosition = new Vector3(carModelStartingPosition.x - CurrentDistanceInMeters, carModelStartingPosition.y, carModelStartingPosition.z);
 
-            carModelTransform.position = Vector3.Lerp(carModelTransform.position, nextPosition, Time.deltaTime);
+            carModelTransform.position = nextPosition;//Vector3.Lerp(carModelTransform.position, nextPosition, 5 * Time.deltaTime);
+
+            UpdateTopSpeed(currentSpeedInKMPerHour);
 
             inputManager.DebugText.text = String.Format("Time: {0} s \nDistance: {1} Km \nGear: {2} \nSpeed: {3} KmH",
                                                          gameManager.GameTime.ToString("0.##"),
@@ -60,6 +70,14 @@ namespace CantFindItGrindIt
             if(CurrentDistanceInMeters >= 400)
             {
                 gameManager.FinishGame();
+            }
+        }
+
+        private void UpdateTopSpeed(float currentSpeedInKMPerHour)
+        {
+            if(currentSpeedInKMPerHour > TopSpeedInKMH)
+            {
+                TopSpeedInKMH = currentSpeedInKMPerHour;
             }
         }
     }

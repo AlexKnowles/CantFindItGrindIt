@@ -9,21 +9,23 @@ namespace CantFindItGrindIt.Managers
     public class GameManager : MonoBehaviour
     {
         public float GameTime;
+        public float TopSpeed;
+        public GameObject GameOverPopup;
+        public GameObject playerCarModel;
 
         public bool GameOver { get; private set; }
 
         private InputManager inputManager;
         private PlayerCar playerCar;
+        private Vector3 playerCarStartingPosition;
 
         // Use this for initialization
         void Start()
         {
-            GameOver = false;
-            GameTime = 0f;
-
             inputManager = GetComponent<InputManager>();
 
-            playerCar = new PlayerCar(this, inputManager);
+            playerCarStartingPosition = playerCarModel.transform.position;
+            RestartGame();
         }
 
         // Update is called once per frame
@@ -41,14 +43,26 @@ namespace CantFindItGrindIt.Managers
         {
             GameOver = true;
 
-            inputManager.GuageClusterGameObjects.ForEach(go => go.SetActive(false));
-            inputManager.TransmissionGameObjects.ForEach(go => go.SetActive(false));
+            inputManager.DeactivateAllControls();
 
+            GameOverPopup.GetComponentInChildren<Text>().text = string.Format("You compeleted the 1/4 mile in {0} seconds, hitting a top speed of {1} MPH!", GameTime.ToString("0.##"), playerCar.TopSpeedInMPH.ToString("#"));
+
+            GameOverPopup.SetActive(true);
         }
 
         public void RestartGame()
         {
+            GameTime = 0f;
+            TopSpeed = 0f;
 
+            playerCarModel.transform.position = playerCarStartingPosition;
+
+            GameOverPopup.SetActive(false);
+            inputManager.ActivateAllControls();
+
+            playerCar = new PlayerCar(this, inputManager, playerCarModel);
+
+            GameOver = false;
         }
     }
 }

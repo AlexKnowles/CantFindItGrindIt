@@ -6,7 +6,12 @@ namespace CantFindItGrindIt.UI
 {
     public class PedalButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        public bool IsBeingHeldDown { get; private set; }
+        public bool IsBeingHeldDown { get; set; }
+
+        void Awake()
+        {
+            IsBeingHeldDown = false;
+        }
 
         public void OnPointerDown(PointerEventData eventData)
         {
