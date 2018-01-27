@@ -55,6 +55,12 @@ namespace CantFindItGrindIt
 
         public void Tick()
         {
+            if (gameManager.GameOver)
+            {
+                BringCarToStop();
+                return;
+            }
+
             if (acceleratorPedal.IsBeingHeldDown)
             {
                 Accelerate();
@@ -116,6 +122,19 @@ namespace CantFindItGrindIt
             float nextMaxSpeed = nextMinSpeed + (CurrentGear.SpeedMax - CurrentGear.SpeedMin);
 
             CurrentGear = new Gear(nextGearInSequence, nextMinSpeed, nextMaxSpeed);
+        }
+
+        private void BringCarToStop()
+        {
+            if (guageCluster.CurrentRPM <= 0)
+            {
+                return;
+            }
+
+            CurrentGear = new Gear(0, 0, CurrentGear.SpeedMax);
+
+            Break();
+            Decelerate();
         }
     }
 }

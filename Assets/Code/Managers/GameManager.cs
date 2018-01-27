@@ -9,12 +9,15 @@ namespace CantFindItGrindIt.Managers
     {
         public float GameTime;
 
+        public bool GameOver { get; private set; }
+
         private InputManager inputManager;
         private PlayerCar playerCar;
 
         // Use this for initialization
         void Start()
         {
+            GameOver = false;
             GameTime = 0f;
 
             inputManager = GetComponent<InputManager>();
@@ -25,8 +28,21 @@ namespace CantFindItGrindIt.Managers
         // Update is called once per frame
         void Update()
         {
-            GameTime += Time.deltaTime;
+            if (!GameOver)
+            {
+                GameTime += Time.deltaTime;
+            }
+
             playerCar.UpdateCarComponents();
         }        
+
+        public void FinishGame()
+        {
+            GameOver = true;
+
+            inputManager.GuageClusterGameObjects.ForEach(go => go.SetActive(false));
+            inputManager.TransmissionGameObjects.ForEach(go => go.SetActive(false));
+
+        }
     }
 }

@@ -56,6 +56,11 @@ namespace CantFindItGrindIt
                                                          CurrentDistanceInMeters.ToString("#,#0"), 
                                                          transmission.CurrentGear.NumberInSequence, 
                                                          currentSpeedInKMPerHour.ToString("##,0"));
+
+            if(CurrentDistanceInMeters >= 400)
+            {
+                gameManager.FinishGame();
+            }
         }
     }
 }
