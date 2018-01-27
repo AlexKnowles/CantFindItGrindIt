@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 112439533}
   - component: {fileID: 112439534}
+  - component: {fileID: 112439535}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -150,17 +151,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 112439532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61eaa5b319872064d8881774689b1283, type: 3}
+  m_Script: {fileID: 11500000, guid: c40918258acec5e4db8686c7fc8569d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AcceleratorButton: {fileID: 1941162531}
-  BreakButton: {fileID: 923280164}
-  ClutchButton: {fileID: 890952881}
-  RevCounter: {fileID: 406962517}
-  Shifter: {fileID: 0}
-  ShiftZone: {fileID: 777359185}
   GoodShiftCountDisplay: {fileID: 799978223}
   BadShiftCountDisplay: {fileID: 672651418}
+--- !u!114 &112439535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 112439532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f43d26c9f5be2341927246249ec59a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransmissionGameObjects:
+  - {fileID: 1223839414}
+  - {fileID: 890952876}
+  - {fileID: 923280159}
+  - {fileID: 1941162526}
+  GuageClusterGameObjects:
+  - {fileID: 777359183}
+  - {fileID: 406962515}
 --- !u!1 &228059856
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +420,7 @@ GameObject:
   - component: {fileID: 406962516}
   - component: {fileID: 406962517}
   m_Layer: 5
-  m_Name: RevCounter
+  m_Name: Tachometer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
