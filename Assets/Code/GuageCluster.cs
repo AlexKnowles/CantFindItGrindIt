@@ -58,5 +58,20 @@ namespace CantFindItGrindIt
         {
             CurrentRPM -= (rpmIncreaseSpeed * Time.deltaTime);
         }
+
+        public void changeShiftZoneSize()
+        {
+            float sizeMin = 0f;
+            float sizeMax = 0.5f;
+
+            float valueMin = 0.5f;
+            float valueMax = 1f;
+
+            float randomSize = UnityEngine.Random.Range(sizeMin, sizeMax);
+            float randomValue = UnityEngine.Random.Range(valueMin, valueMax);
+
+            shiftZone.size = randomSize;
+            shiftZone.value = randomValue;
+        }
     }
 }

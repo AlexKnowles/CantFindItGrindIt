@@ -88,6 +88,7 @@ namespace CantFindItGrindIt
             if (currentShiftState == requiredShiftState && guageCluster.IsTachometerInShiftZone())
             {
                 NextGear();
+                guageCluster.changeShiftZoneSize();
             }            
         }
 
