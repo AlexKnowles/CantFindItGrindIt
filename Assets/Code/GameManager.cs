@@ -9,13 +9,12 @@ public class GameManager : MonoBehaviour
     public LongPress BreakButton;
     public LongPress ClutchButton;
     public Slider RevCounter;
+    public Slider Shifter;
     public Scrollbar ShiftZone;
 
     public Text GoodShiftCountDisplay;
     public Text BadShiftCountDisplay;
-
-    public float RevSpeed = 5f;
-    
+        
     private int goodShiftCount = 0;
     private int badShiftCount = 0;
 
@@ -33,7 +32,6 @@ public class GameManager : MonoBehaviour
         if (AcceleratorButton.IsDown)
         {
             Accelerate();
-            IsRevcounterInRange();
             return;
         }
 
@@ -48,19 +46,16 @@ public class GameManager : MonoBehaviour
         }
 
         Decelerate();
-        IsRevcounterInRange();
-    }
-
-    private void LateUpdate()
-    {
-        
     }
 
     public void DoShift()
     {
         if(ClutchButton.IsDown)
         {
-            RecordGoodShift();
+            if (Shifter.value != 1 && IsRevcounterInRange())
+            {
+                RecordGoodShift();
+            }
         }
         else
         {
@@ -101,19 +96,14 @@ public class GameManager : MonoBehaviour
         RevCounter.value -= (((revSpeed/3) * (1 + (RevCounter.value/RevCounter.maxValue))) * Time.deltaTime);
     }
 
-    private void IsRevcounterInRange()
+    private bool IsRevcounterInRange()
     {
         float currentScrollValue = ShiftZone.value;
         float currentScrollWidth = ShiftZone.size / 2;
         float scrollBarMinBound = currentScrollValue - currentScrollWidth;
         float scrollBarMaxBound = currentScrollValue + currentScrollWidth;
 
-        if(RevCounter.value >=  scrollBarMinBound && RevCounter.value <= scrollBarMaxBound)
-        {
-            Debug.Log(RevCounter.value);
-            Debug.Log(scrollBarMinBound);
-            //Debug.Log("In Range!!");
-        }
+        return (RevCounter.value >= scrollBarMinBound && RevCounter.value <= scrollBarMaxBound); 
     }
 
 }
