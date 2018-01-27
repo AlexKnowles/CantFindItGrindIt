@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace CantFindItGrindIt.Managers
@@ -42,6 +43,11 @@ namespace CantFindItGrindIt.Managers
 
             inputManager.GuageClusterGameObjects.ForEach(go => go.SetActive(false));
             inputManager.TransmissionGameObjects.ForEach(go => go.SetActive(false));
+
+        }
+
+        public void RestartGame()
+        {
 
         }
     }

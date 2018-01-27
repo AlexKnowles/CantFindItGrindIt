@@ -118,8 +118,8 @@ namespace CantFindItGrindIt
             
             int nextGearInSequence = CurrentGear.NumberInSequence + 1;
 
-            float nextMinSpeed = CurrentGear.SpeedMax * 0.8f;
-            float nextMaxSpeed = nextMinSpeed + (CurrentGear.SpeedMax - CurrentGear.SpeedMin);
+            float nextMinSpeed = CurrentGear.SpeedMin + 10;
+            float nextMaxSpeed = nextMinSpeed + 50;
 
             CurrentGear = new Gear(nextGearInSequence, nextMinSpeed, nextMaxSpeed);
         }
