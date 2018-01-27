@@ -19,7 +19,7 @@ namespace CantFindItGrindIt
             this.inputManager = inputManager;
 
             guageCluster = new GuageCluster(inputManager);
-            transmission = new Transmission(gameManager, inputManager, guageCluster);
+            transmission = new Transmission(gameManager, inputManager, this, guageCluster);
         }
 
         public void UpdateCarComponents()

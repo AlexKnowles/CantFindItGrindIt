@@ -16,14 +16,28 @@ namespace CantFindItGrindIt
         private Slider gearShifter;
 
         private GameManager gameManager;
+        private PlayerCar playerCar;
         private GuageCluster guageCluster;
 
-        private float rpmIncreaseSpeed = 0.8f;
-        
-        public Transmission(GameManager gameManager, InputManager inputManager, GuageCluster guageCluster)
+        private float currentGear = 1;
+        private float rpmIncreaseSpeed = 0.7f;
+        private ShifterState requiredShiftState;
+
+        private ShifterState currentShiftState
+        {
+            get
+            {
+                return (ShifterState)Mathf.RoundToInt(gearShifter.value);
+            }
+        }
+
+        public Transmission(GameManager gameManager, InputManager inputManager, PlayerCar playerCar, GuageCluster guageCluster)
         {
             this.gameManager = gameManager;
+            this.playerCar = playerCar;
             this.guageCluster = guageCluster;
+
+            requiredShiftState = ShifterState.OddGear;
 
             List<GameObject> transmissionGameObjects = inputManager.TransmissionGameObjects;
 
@@ -57,22 +71,18 @@ namespace CantFindItGrindIt
             Decelerate();
 
         }
-        
+
         public void GearShifterMoved()
         {
-            if (clutchPedal.IsBeingHeldDown)
-            {
-                if (gearShifter.value != 1 && guageCluster.IsTachometerInShiftZone())
-                {
-                    gameManager.RecordGoodShift();
-                }
+            if (!clutchPedal.IsBeingHeldDown)
+            { 
+                return;
             }
-            else
+            
+            if (currentShiftState == requiredShiftState && guageCluster.IsTachometerInShiftZone())
             {
-                gameManager.RecordBadShift();
-            }
-
-            gameManager.UpdateDispalyOfShiftText();
+                NextGear();
+            }            
         }
 
         private void Accelerate()
@@ -92,6 +102,12 @@ namespace CantFindItGrindIt
             float deceleraingRPMDecrease = ((rpmIncreaseSpeed / 3) * (1 + (guageCluster.CurrentRPM / guageCluster.RedLineRPM)));
 
             guageCluster.DecreaseRPM(deceleraingRPMDecrease);
+        }
+
+        private void NextGear()
+        {
+            currentGear++;
+            Debug.Log("NEXT GEAR: " + currentGear);
         }
     }
 }

@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scences/Prototype.unity
-    guid: 4c5764df33bfbc940894f0642b283afd
+    guid: ac15310a0c6d7c54492337d44b7df3b5

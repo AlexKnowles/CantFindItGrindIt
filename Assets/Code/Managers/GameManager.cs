@@ -7,12 +7,6 @@ namespace CantFindItGrindIt.Managers
 {
     public class GameManager : MonoBehaviour
     {
-        public Text GoodShiftCountDisplay;
-        public Text BadShiftCountDisplay;
-
-        private int goodShiftCount = 0;
-        private int badShiftCount = 0;
-
         private InputManager inputManager;
         private PlayerCar playerCar;
 
@@ -28,22 +22,6 @@ namespace CantFindItGrindIt.Managers
         void Update()
         {
             playerCar.UpdateCarComponents();
-        }
-        
-        public void RecordGoodShift()
-        {
-            goodShiftCount++;
-        }
-
-        public void RecordBadShift()
-        {
-            badShiftCount++;
-        }
-
-        public void UpdateDispalyOfShiftText()
-        {
-            GoodShiftCountDisplay.text = goodShiftCount.ToString();
-            BadShiftCountDisplay.text = badShiftCount.ToString();
         }        
     }
 }
