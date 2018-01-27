@@ -7,9 +7,16 @@ public class GameManager : MonoBehaviour
 {
     public LongPress AcceleratorButton;
     public LongPress BreakButton;
+    public LongPress ClutchButton;
     public Slider RevCounter;
 
+    public Text GoodShiftCountDisplay;
+    public Text BadShiftCountDisplay;
+
     public float RevSpeed = 5f;
+    
+    private int goodShiftCount = 0;
+    private int badShiftCount = 0;
 
     // Use this for initialization
     void Start ()
@@ -26,6 +33,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        if(RevCounter.value <= 0)
+        {
+            return;
+        }
+
         if (BreakButton.IsDown)
         {
             Break();
@@ -33,6 +45,36 @@ public class GameManager : MonoBehaviour
 
         Decelerate();
 	}
+
+    public void DoShift()
+    {
+        if(ClutchButton.IsDown)
+        {
+            RecordGoodShift();
+        }
+        else
+        {
+            RecordBadShift();
+        }
+
+        UpdateDispalyOfShiftText();
+    }
+
+    private void RecordGoodShift()
+    {
+        goodShiftCount++;
+    }
+
+    private void RecordBadShift()
+    {
+        badShiftCount++;
+    }
+
+    private void UpdateDispalyOfShiftText()
+    {
+        GoodShiftCountDisplay.text = goodShiftCount.ToString();
+        BadShiftCountDisplay.text = badShiftCount.ToString();
+    }
 
     private void Accelerate()
     {
@@ -48,4 +90,5 @@ public class GameManager : MonoBehaviour
     {
         RevCounter.value -= (((RevSpeed/3) * (1 + (RevCounter.value/RevCounter.maxValue))) * Time.deltaTime);
     }
+
 }
