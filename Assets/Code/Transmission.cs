@@ -10,6 +10,8 @@ namespace CantFindItGrindIt
 {
     public class Transmission
     {
+        public Gear CurrentGear;
+
         private PedalButton acceleratorPedal;
         private PedalButton breakPedal;
         private PedalButton clutchPedal;
@@ -18,10 +20,10 @@ namespace CantFindItGrindIt
         private GameManager gameManager;
         private PlayerCar playerCar;
         private GuageCluster guageCluster;
-
-        private float currentGear = 1;
+        
         private float rpmIncreaseSpeed = 0.7f;
         private ShifterState requiredShiftState;
+
 
         private ShifterState currentShiftState
         {
@@ -37,7 +39,8 @@ namespace CantFindItGrindIt
             this.playerCar = playerCar;
             this.guageCluster = guageCluster;
 
-            requiredShiftState = ShifterState.OddGear;
+            requiredShiftState = ShifterState.EvenGear;
+            CurrentGear = new Gear(1, 0f, 50f);
 
             List<GameObject> transmissionGameObjects = inputManager.TransmissionGameObjects;
 
@@ -69,7 +72,6 @@ namespace CantFindItGrindIt
             }
 
             Decelerate();
-
         }
 
         public void GearShifterMoved()
@@ -106,8 +108,14 @@ namespace CantFindItGrindIt
 
         private void NextGear()
         {
-            currentGear++;
-            Debug.Log("NEXT GEAR: " + currentGear);
+            requiredShiftState = (requiredShiftState == ShifterState.OddGear ? ShifterState.EvenGear : ShifterState.OddGear);
+            
+            int nextGearInSequence = CurrentGear.NumberInSequence + 1;
+
+            float nextMinSpeed = CurrentGear.SpeedMax * 0.8f;
+            float nextMaxSpeed = nextMinSpeed + (CurrentGear.SpeedMax - CurrentGear.SpeedMin);
+
+            CurrentGear = new Gear(nextGearInSequence, nextMinSpeed, nextMaxSpeed);
         }
     }
 }
