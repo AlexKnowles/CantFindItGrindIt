@@ -13,6 +13,8 @@ namespace CantFindItGrindIt
 
         private Transmission transmission;
         private GuageCluster guageCluster;
+        private Transform carModelTransform;
+        private Vector3 carModelStartingPosition;
 
         public float CurrentDistanceInMeters { get; private set; }
 
@@ -24,6 +26,8 @@ namespace CantFindItGrindIt
             guageCluster = new GuageCluster(inputManager);
             transmission = new Transmission(gameManager, inputManager, this, guageCluster);
 
+            carModelTransform = GameObject.FindGameObjectWithTag("Car").GetComponent<Transform>();
+            carModelStartingPosition = carModelTransform.position;
             CurrentDistanceInMeters = 0;
         }
 
@@ -42,6 +46,10 @@ namespace CantFindItGrindIt
             float currentSpeedInFrame = currentSpeedInMetersPerSecond * Time.deltaTime;
 
             CurrentDistanceInMeters += currentSpeedInFrame;
+
+            Vector3 nextPosition = new Vector3(carModelStartingPosition.x - CurrentDistanceInMeters, carModelStartingPosition.y, carModelStartingPosition.z);
+
+            carModelTransform.position = Vector3.Lerp(carModelTransform.position, nextPosition, Time.deltaTime);
 
             inputManager.DebugText.text = String.Format("Time: {0} s \nDistance: {1} Km \nGear: {2} \nSpeed: {3} KmH",
                                                          gameManager.GameTime.ToString("0.##"),
