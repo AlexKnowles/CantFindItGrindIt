@@ -12,6 +12,7 @@ namespace CantFindItGrindIt.Managers
         public float TopSpeed;
         public GameObject GameOverPopup;
         public GameObject playerCarModel;
+        public GameObject playerCarShifterModel;
 
         public bool GameOver { get; private set; }
 
@@ -60,7 +61,7 @@ namespace CantFindItGrindIt.Managers
             GameOverPopup.SetActive(false);
             inputManager.ActivateAllControls();
 
-            playerCar = new PlayerCar(this, inputManager, playerCarModel);
+            playerCar = new PlayerCar(this, inputManager, playerCarModel, playerCarShifterModel);
 
             GameOver = false;
         }

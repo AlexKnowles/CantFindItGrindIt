@@ -19,11 +19,12 @@ namespace CantFindItGrindIt
 
         private GameManager gameManager;
         private GuageCluster guageCluster;
-        
+        private Animator gearShifterAnimator;
+        private Transform gearShifterBox;
+
         private float rpmIncreaseSpeed = 0.7f;
-        private ShifterState requiredShiftState;
 
-
+        private ShifterState previousShiftState;
         private ShifterState currentShiftState
         {
             get
@@ -32,12 +33,12 @@ namespace CantFindItGrindIt
             }
         }
 
-        public Transmission(GameManager gameManager, InputManager inputManager, GuageCluster guageCluster)
+        public Transmission(GameManager gameManager, InputManager inputManager, GuageCluster guageCluster, GameObject gerarShifterModel)
         {
             this.gameManager = gameManager;
             this.guageCluster = guageCluster;
 
-            requiredShiftState = ShifterState.EvenGear;
+            previousShiftState = ShifterState.OddGear;
             CurrentGear = new Gear(1, 0f, 50f);
 
             List<GameObject> transmissionGameObjects = inputManager.TransmissionGameObjects;
@@ -49,6 +50,9 @@ namespace CantFindItGrindIt
             gearShifter = transmissionGameObjects.Where(butt => butt.name == "Shifter").FirstOrDefault().GetComponent<Slider>();
             gearShifter.value = 0;
             gearShifter.onValueChanged.AddListener(delegate { GearShifterMoved(); });
+
+            gearShifterAnimator = gerarShifterModel.GetComponent<Animator>();
+            gearShifterBox = gerarShifterModel.GetComponentsInChildren<Transform>().Where(tran => tran.name == "Gate").FirstOrDefault();
         }
 
         public void Tick()
@@ -80,16 +84,38 @@ namespace CantFindItGrindIt
 
         public void GearShifterMoved()
         {
-            if (!clutchPedal.IsBeingHeldDown)
-            { 
+            if(previousShiftState == currentShiftState)
+            {
                 return;
             }
-            
-            if (currentShiftState == requiredShiftState && guageCluster.IsTachometerInShiftZone())
+
+            if (!clutchPedal.IsBeingHeldDown)
+            { 
+                if(currentShiftState != ShifterState.Neutral)
+                {
+                    gearShifter.value = 1f;
+                    gearShifterAnimator.SetTrigger(currentShiftState.ToString());
+                }
+                //Grind SOund
+                return;
+            }
+
+            gearShifterAnimator.SetTrigger(currentShiftState.ToString());
+
+
+            if (previousShiftState == ShifterState.EvenGear)
+            {
+                gearShifterBox.localPosition = new Vector3(gearShifterBox.localPosition.x, gearShifterBox.localPosition.y, gearShifterBox.localPosition.z - 0.025f);
+            }
+            else if (currentShiftState != ShifterState.Neutral && guageCluster.IsTachometerInShiftZone())
             {
                 NextGear();
                 guageCluster.changeShiftZoneSize();
-            }            
+            }
+
+            gearShifterAnimator.SetTrigger(currentShiftState.ToString());
+
+            previousShiftState = currentShiftState;
         }
 
         private void Accelerate()
@@ -112,9 +138,7 @@ namespace CantFindItGrindIt
         }
 
         private void NextGear()
-        {
-            requiredShiftState = (requiredShiftState == ShifterState.OddGear ? ShifterState.EvenGear : ShifterState.OddGear);
-            
+        {            
             int nextGearInSequence = CurrentGear.NumberInSequence + 1;
 
             float nextMinSpeed = CurrentGear.SpeedMin + 15;
