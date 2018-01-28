@@ -26,12 +26,12 @@ namespace CantFindItGrindIt
             }
         }
 
-        public PlayerCar(GameManager gameManager, InputManager inputManager, GameObject carModel)
+        public PlayerCar(GameManager gameManager, InputManager inputManager, GameObject carModel, AudioManager audioManager)
         {
             this.gameManager = gameManager;
             this.inputManager = inputManager;
 
-            guageCluster = new GuageCluster(inputManager);
+            guageCluster = new GuageCluster(inputManager, audioManager);
             transmission = new Transmission(gameManager, inputManager, guageCluster);
 
             carModelTransform = carModel.GetComponent<Transform>();

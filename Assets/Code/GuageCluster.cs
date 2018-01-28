@@ -32,9 +32,11 @@ namespace CantFindItGrindIt
 
         private Slider tachometer;
         private Scrollbar shiftZone;
+        private AudioManager audioManager;
 
-        public GuageCluster(InputManager inputManager)
+        public GuageCluster(InputManager inputManager, AudioManager audioManager)
         {
+            this.audioManager = audioManager;
             tachometer = inputManager.GuageClusterGameObjects.Where(go => go.name == "Tachometer").FirstOrDefault().GetComponent<Slider>();
             shiftZone = inputManager.GuageClusterGameObjects.Where(go => go.name == "ShiftZone").FirstOrDefault().GetComponent<Scrollbar>();
         }
@@ -51,11 +53,42 @@ namespace CantFindItGrindIt
 
         public void IncreaseRPM(float increaseAmount)
         {
+            if(CurrentRPM == 0) {
+                this.audioManager.playIdleSound();
+            }
+            else if(CurrentRPM < 0.3)
+            {
+                this.audioManager.playLowRpm();
+            }
+            else if(CurrentRPM >= 0.3 && CurrentRPM <= 0.6)
+            {
+                this.audioManager.playMedRpm();
+            }
+            else if(CurrentRPM > 0.6 && CurrentRPM <= 0.9)
+            {
+                this.audioManager.playHighRpm();
+            }
+            else if(CurrentRPM > 0.95)
+            {
+                this.audioManager.playMaxRpm();
+            }
             CurrentRPM += (increaseAmount * Time.deltaTime);
         }
 
         public void DecreaseRPM(float rpmIncreaseSpeed)
         {
+            if(CurrentRPM > 0.95)
+            {
+                this.audioManager.playMaxRpmOff();
+            }
+            else if(CurrentRPM > 0.6 && CurrentRPM <= 0.9)
+            {
+                this.audioManager.playMidRpmOff();
+            }
+            else if(CurrentRPM < 0.6 && CurrentRPM > 0)
+            {
+                this.audioManager.playLowOff();
+            }
             CurrentRPM -= (rpmIncreaseSpeed * Time.deltaTime);
         }
 

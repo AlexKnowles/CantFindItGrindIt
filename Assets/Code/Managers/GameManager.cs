@@ -16,6 +16,7 @@ namespace CantFindItGrindIt.Managers
         public bool GameOver { get; private set; }
 
         private InputManager inputManager;
+        private AudioManager audioManager;
         private PlayerCar playerCar;
         private Vector3 playerCarStartingPosition;
 
@@ -23,6 +24,7 @@ namespace CantFindItGrindIt.Managers
         void Start()
         {
             inputManager = GetComponent<InputManager>();
+            audioManager = GetComponent<AudioManager>();
 
             playerCarStartingPosition = playerCarModel.transform.position;
             RestartGame();
@@ -60,7 +62,8 @@ namespace CantFindItGrindIt.Managers
             GameOverPopup.SetActive(false);
             inputManager.ActivateAllControls();
 
-            playerCar = new PlayerCar(this, inputManager, playerCarModel);
+            playerCar = new PlayerCar(this, inputManager, playerCarModel, audioManager);
+            this.audioManager.playIdleSound();
 
             GameOver = false;
         }

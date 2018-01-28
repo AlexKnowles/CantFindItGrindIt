@@ -38,7 +38,7 @@ namespace CantFindItGrindIt
             this.guageCluster = guageCluster;
 
             requiredShiftState = ShifterState.EvenGear;
-            CurrentGear = new Gear(1, 0f, 50f);
+            CurrentGear = new Gear(1, 0f, 300f);
 
             List<GameObject> transmissionGameObjects = inputManager.TransmissionGameObjects;
 
